@@ -14,12 +14,12 @@
 # limitations under the License.
 
 import datetime
-from decimal import Decimal
 import unittest
+from decimal import Decimal
 
-from babel.numbers import NumberFormatError
 import pytz
 import webapp2
+from babel.numbers import NumberFormatError
 from webapp2_extras import i18n
 
 
@@ -55,48 +55,33 @@ class I18nTestCase(unittest.TestCase):
     def test_gettext_with_variables(self):
         self.assertEqual(i18n.gettext('foo %(foo)s'), u'foo %(foo)s')
         self.assertEqual(
-            i18n.gettext('foo %(foo)s') % {'foo': 'bar'},
-            u'foo bar'
-        )
+            i18n.gettext('foo %(foo)s') % {'foo': 'bar'}, u'foo bar')
         self.assertEqual(i18n.gettext('foo %(foo)s', foo='bar'), u'foo bar')
 
     def test_ngettext(self):
         self.assertEqual(i18n.ngettext('One foo', 'Many foos', 1), u'One foo')
-        self.assertEqual(
-            i18n.ngettext('One foo', 'Many foos', 2),
-            u'Many foos'
-        )
+        self.assertEqual(i18n.ngettext('One foo', 'Many foos', 2),
+                         u'Many foos')
 
     def test_ngettext_with_variables(self):
         self.assertEqual(
             i18n.ngettext('One foo %(foo)s', 'Many foos %(foo)s', 1),
-            u'One foo %(foo)s'
-        )
+            u'One foo %(foo)s')
         self.assertEqual(
             i18n.ngettext('One foo %(foo)s', 'Many foos %(foo)s', 2),
-            u'Many foos %(foo)s'
-        )
+            u'Many foos %(foo)s')
         self.assertEqual(
-            i18n.ngettext(
-                'One foo %(foo)s', 'Many foos %(foo)s', 1,
-                foo='bar'),
-            u'One foo bar'
-        )
+            i18n.ngettext('One foo %(foo)s', 'Many foos %(foo)s', 1,
+                          foo='bar'), u'One foo bar')
         self.assertEqual(
             i18n.ngettext('One foo %(foo)s', 'Many foos %(foo)s', 2,
-                          foo='bar'),
-            u'Many foos bar'
-        )
+                          foo='bar'), u'Many foos bar')
         self.assertEqual(
-            i18n.ngettext(
-                'One foo %(foo)s', 'Many foos %(foo)s', 1) % {'foo': 'bar'},
-            u'One foo bar'
-        )
+            i18n.ngettext('One foo %(foo)s', 'Many foos %(foo)s', 1) %
+            {'foo': 'bar'}, u'One foo bar')
         self.assertEqual(
-            i18n.ngettext(
-                'One foo %(foo)s', 'Many foos %(foo)s', 2) % {'foo': 'bar'},
-            u'Many foos bar'
-        )
+            i18n.ngettext('One foo %(foo)s', 'Many foos %(foo)s', 2) %
+            {'foo': 'bar'}, u'Many foos bar')
 
     def test_lazy_gettext(self):
         self.assertEqual(i18n.lazy_gettext('foo'), u'foo')
@@ -109,16 +94,12 @@ class I18nTestCase(unittest.TestCase):
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
 
         self.assertEqual(i18n.format_date(value, format='short'), u'11/10/09')
-        self.assertEqual(
-            i18n.format_date(value, format='medium'), u'Nov 10, 2009'
-        )
-        self.assertEqual(
-            i18n.format_date(value, format='long'), u'November 10, 2009'
-        )
-        self.assertEqual(
-            i18n.format_date(value, format='full'),
-            u'Tuesday, November 10, 2009'
-        )
+        self.assertEqual(i18n.format_date(value, format='medium'),
+                         u'Nov 10, 2009')
+        self.assertEqual(i18n.format_date(value, format='long'),
+                         u'November 10, 2009')
+        self.assertEqual(i18n.format_date(value, format='full'),
+                         u'Tuesday, November 10, 2009')
 
     def test_format_date_no_format(self):
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
@@ -165,101 +146,74 @@ class I18nTestCase(unittest.TestCase):
         i18n.get_i18n().set_locale('pt_BR')
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
 
-        self.assertEqual(
-            i18n.format_date(value, format='short'),
-            u'10/11/09'
-        )
-        self.assertEqual(
-            i18n.format_date(value, format='medium'), u'10 de nov de 2009')
-        self.assertEqual(
-            i18n.format_date(value, format='long'),
-            u'10 de novembro de 2009'
-        )
-        self.assertEqual(
-            i18n.format_date(value, format='full'),
-            u'terça-feira, 10 de novembro de 2009'
-        )
+        self.assertEqual(i18n.format_date(value, format='short'),
+                         u'10/11/2009')
+        self.assertEqual(i18n.format_date(value, format='medium'),
+                         u'10 de nov. de 2009')
+        self.assertEqual(i18n.format_date(value, format='long'),
+                         u'10 de novembro de 2009')
+        self.assertEqual(i18n.format_date(value, format='full'),
+                         u'terça-feira, 10 de novembro de 2009')
 
     def test_format_datetime(self):
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
 
-        self.assertEqual(
-            i18n.format_datetime(value, format='short'),
-            u'11/10/09, 4:36 PM'
-        )
-        self.assertEqual(
-            i18n.format_datetime(value, format='medium'),
-            u'Nov 10, 2009, 4:36:05 PM'
-        )
-        self.assertEqual(
-            i18n.format_datetime(value, format='long'),
-            u'November 10, 2009 at 4:36:05 PM +0000'
-        )
+        self.assertEqual(i18n.format_datetime(value, format='short'),
+                         u'11/10/09, 4:36 PM')
+        self.assertEqual(i18n.format_datetime(value, format='medium'),
+                         u'Nov 10, 2009, 4:36:05 PM')
+        self.assertEqual(i18n.format_datetime(value, format='long'),
+                         u'November 10, 2009 at 4:36:05 PM UTC')
 
         # self.assertEqual(i18n.format_datetime(value, format='full'),
         # u'Tuesday, November 10, 2009 4:36:05 PM World (GMT) Time')
 
         self.assertEqual(
             i18n.format_datetime(value, format='full'),
-            u'Tuesday, November 10, 2009 at 4:36:05 PM GMT+00:00'
+            u'Tuesday, November 10, 2009 at 4:36:05 PM Coordinated Universal Time'
         )
 
         i18n.get_i18n().set_timezone('America/Chicago')
-        self.assertEqual(
-            i18n.format_datetime(value, format='short'),
-            u'11/10/09, 10:36 AM'
-        )
+        self.assertEqual(i18n.format_datetime(value, format='short'),
+                         u'11/10/09, 10:36 AM')
 
     def test_format_datetime_no_format(self):
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
-        self.assertEqual(
-            i18n.format_datetime(value),
-            u'Nov 10, 2009, 4:36:05 PM'
-        )
+        self.assertEqual(i18n.format_datetime(value),
+                         u'Nov 10, 2009, 4:36:05 PM')
 
     def test_format_datetime_pt_BR(self):
         i18n.get_i18n().set_locale('pt_BR')
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
 
-        self.assertEqual(
-            i18n.format_datetime(value, format='short'),
-            u'10/11/09 16:36'
-        )
-        self.assertEqual(
-            i18n.format_datetime(value, format='medium'),
-            u'10 de nov de 2009 16:36:05'
-        )
+        self.assertEqual(i18n.format_datetime(value, format='short'),
+                         u'10/11/2009 16:36')
+        self.assertEqual(i18n.format_datetime(value, format='medium'),
+                         u'10 de nov. de 2009 16:36:05')
         # self.assertEqual(i18n.format_datetime(value, format='long'),
         # u'10 de novembro de 2009 16:36:05 +0000')
-        self.assertEqual(
-            i18n.format_datetime(value, format='long'),
-            u'10 de novembro de 2009 16:36:05 +0000'
-        )
+        self.assertEqual(i18n.format_datetime(value, format='long'),
+                         u'10 de novembro de 2009 16:36:05 UTC')
         # self.assertEqual(i18n.format_datetime(value, format='full'),
         # u'terça-feira, 10 de novembro de 2009
         # 16h36min05s Horário Mundo (GMT)')
         self.assertEqual(
             i18n.format_datetime(value, format='full'),
-            u'ter\xe7a-feira, 10 de novembro de 2009 16:36:05 GMT+00:00'
+            u'ter\xe7a-feira, 10 de novembro de 2009 16:36:05 Horário Universal Coordenado'
         )
 
     def test_format_time(self):
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
 
         self.assertEqual(i18n.format_time(value, format='short'), u'4:36 PM')
-        self.assertEqual(
-            i18n.format_time(value, format='medium'),
-            u'4:36:05 PM')
-        self.assertEqual(
-            i18n.format_time(value, format='long'),
-            u'4:36:05 PM +0000'
-        )
+        self.assertEqual(i18n.format_time(value, format='medium'),
+                         u'4:36:05 PM')
+        self.assertEqual(i18n.format_time(value, format='long'),
+                         u'4:36:05 PM UTC')
         # self.assertEqual(i18n.format_time(value, format='full'),
         #  u'4:36:05 PM World (GMT) Time')
-        self.assertEqual(
-            i18n.format_time(value, format='full'),
-            u'4:36:05 PM GMT+00:00'
-        )
+        self.assertEqual(i18n.format_time(value, format='full'),
+                         u'4:36:05 PM Coordinated Universal Time')
 
     def test_format_time_no_format(self):
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
@@ -270,21 +224,15 @@ class I18nTestCase(unittest.TestCase):
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
 
         self.assertEqual(i18n.format_time(value, format='short'), u'16:36')
-        self.assertEqual(
-            i18n.format_time(value, format='medium'),
-            u'16:36:05'
-        )
+        self.assertEqual(i18n.format_time(value, format='medium'), u'16:36:05')
         # self.assertEqual(i18n.format_time(value, format='long'),
         #  u'16:36:05 +0000')
-        self.assertEqual(
-            i18n.format_time(value, format='long'),
-            u'16:36:05 +0000'
-        )
+        self.assertEqual(i18n.format_time(value, format='long'),
+                         u'16:36:05 UTC')
         # self.assertEqual(i18n.format_time(value, format='full'),
         #  u'16h36min05s Horário Mundo (GMT)')
-        self.assertEqual(
-            i18n.format_time(value, format='full'),
-            u'16:36:05 GMT+00:00')
+        self.assertEqual(i18n.format_time(value, format='full'),
+                         u'16:36:05 Horário Universal Coordenado')
 
         i18n.get_i18n().set_timezone('America/Chicago')
         self.assertEqual(i18n.format_time(value, format='short'), u'10:36')
@@ -293,15 +241,13 @@ class I18nTestCase(unittest.TestCase):
         i18n.get_i18n().set_locale('en_US')
         self.assertEqual(i18n.parse_date('4/1/04'), datetime.date(2004, 4, 1))
         i18n.get_i18n().set_locale('de_DE')
-        self.assertEqual(
-            i18n.parse_date('01.04.2004'),
-            datetime.date(2004, 4, 1)
-        )
+        self.assertEqual(i18n.parse_date('01.04.2004'),
+                         datetime.date(2004, 4, 1))
 
     def test_parse_datetime(self):
         i18n.get_i18n().set_locale('en_US')
-        self.assertRaises(
-            AttributeError, i18n.parse_datetime, '4/1/04 16:08:09')
+        self.assertRaises(AttributeError, i18n.parse_datetime,
+                          '4/1/04 16:08:09')
 
     def test_parse_time(self):
         i18n.get_i18n().set_locale('en_US')
@@ -320,54 +266,40 @@ class I18nTestCase(unittest.TestCase):
         # i18n.format_timedelta(datetime.timedelta(weeks=12)),
         # u'3 months')
 
-        self.assertEqual(
-            i18n.format_timedelta(datetime.timedelta(weeks=12)),
-            u'3 months'
-        )
+        self.assertEqual(i18n.format_timedelta(datetime.timedelta(weeks=12)),
+                         u'3 months')
         i18n.get_i18n().set_locale('es')
         # self.assertEqual(
         # i18n.format_timedelta(datetime.timedelta(seconds=1)),
         #  u'1 segundo'
         # )
-        self.assertEqual(
-            i18n.format_timedelta(datetime.timedelta(seconds=1)),
-            u'1 segundo'
-        )
+        self.assertEqual(i18n.format_timedelta(datetime.timedelta(seconds=1)),
+                         u'1 segundo')
         i18n.get_i18n().set_locale('en_US')
         self.assertEqual(
             i18n.format_timedelta(datetime.timedelta(hours=3),
-                                  granularity='day'),
-            u'1 day'
-        )
+                                  granularity='day'), u'1 day')
         self.assertEqual(
-            i18n.format_timedelta(
-                datetime.timedelta(hours=23), threshold=0.9),
-            u'1 day'
-        )
+            i18n.format_timedelta(datetime.timedelta(hours=23), threshold=0.9),
+            u'1 day')
         # self.assertEqual(i18n.format_timedelta(
         # datetime.timedelta(hours=23), threshold=1.1),
         #  u'23 hours'
         # )
         self.assertEqual(
-            i18n.format_timedelta(
-                datetime.timedelta(hours=23), threshold=1.1),
-            u'23 hours'
-        )
+            i18n.format_timedelta(datetime.timedelta(hours=23), threshold=1.1),
+            u'23 hours')
         self.assertEqual(
-            i18n.format_timedelta(
-                datetime.datetime.now() - datetime.timedelta(days=5)),
-            u'5 days'
-        )
+            i18n.format_timedelta(datetime.datetime.now() -
+                                  datetime.timedelta(days=5)), u'5 days')
 
     def test_format_iso(self):
         value = datetime.datetime(2009, 11, 10, 16, 36, 5)
 
         self.assertEqual(i18n.format_date(value, format='iso'), u'2009-11-10')
         self.assertEqual(i18n.format_time(value, format='iso'), u'16:36:05')
-        self.assertEqual(
-            i18n.format_datetime(value, format='iso'),
-            u'2009-11-10T16:36:05+0000'
-        )
+        self.assertEqual(i18n.format_datetime(value, format='iso'),
+                         u'2009-11-10T16:36:05+0000')
 
     # ==========================================================================
     # Timezones
@@ -422,18 +354,15 @@ class I18nTestCase(unittest.TestCase):
         i18n.get_i18n().set_locale('de_DE')
         self.assertEqual(
             i18n.get_timezone_location(pytz.timezone('America/St_Johns')),
-            u'Neufundland-Zeit'
-        )
+            u'Neufundland-Zeit')
         i18n.get_i18n().set_locale('de_DE')
         self.assertEqual(
             i18n.get_timezone_location(pytz.timezone('America/Mexico_City')),
-            u'Nordamerikanische Inlandzeit'
-        )
+            u'Nordamerikanische Inlandzeit')
         i18n.get_i18n().set_locale('de_DE')
         self.assertEqual(
             i18n.get_timezone_location(pytz.timezone('Europe/Berlin')),
-            u'Mitteleurop\xe4ische Zeit'
-        )
+            u'Mitteleurop\xe4ische Zeit')
 
     # ==========================================================================
     # Number formatting
@@ -461,29 +390,22 @@ class I18nTestCase(unittest.TestCase):
         self.assertEqual(i18n.format_currency(1099.98, 'USD'), u'$1,099.98')
         self.assertEqual(
             i18n.format_currency(1099.98, 'EUR', u'\xa4\xa4 #,##0.00'),
-            u'EUR 1,099.98'
-        )
+            u'EUR 1,099.98')
 
         i18n.get_i18n().set_locale('es_CO')
-        self.assertEqual(
-            i18n.format_currency(1099.98, 'USD'),
-            u'US$\xa01.099,98'
-        )
+        self.assertEqual(i18n.format_currency(1099.98, 'USD'),
+                         u'US$\xa01.099,98')
 
         i18n.get_i18n().set_locale('de_DE')
-        self.assertEqual(
-            i18n.format_currency(1099.98, 'EUR'),
-            u'1.099,98\xa0\u20ac'
-        )
+        self.assertEqual(i18n.format_currency(1099.98, 'EUR'),
+                         u'1.099,98\xa0\u20ac')
 
     def test_format_percent(self):
         i18n.get_i18n().set_locale('en_US')
         self.assertEqual(i18n.format_percent(0.34), u'34%')
         self.assertEqual(i18n.format_percent(25.1234), u'2,512%')
-        self.assertEqual(
-            i18n.format_percent(25.1234, u'#,##0\u2030'),
-            u'25,123\u2030'
-        )
+        self.assertEqual(i18n.format_percent(25.1234, u'#,##0\u2030'),
+                         u'25,123\u2030')
 
         i18n.get_i18n().set_locale('sv_SE')
         self.assertEqual(i18n.format_percent(25.1234), u'2\xa0512\xa0%')
@@ -491,10 +413,8 @@ class I18nTestCase(unittest.TestCase):
     def test_format_scientific(self):
         i18n.get_i18n().set_locale('en_US')
         self.assertEqual(i18n.format_scientific(10000), u'1E4')
-        self.assertEqual(
-            i18n.format_scientific(1234567, u'##0E00'),
-            u'1.23E06'
-        )
+        self.assertEqual(i18n.format_scientific(1234567, u'##0E00'),
+                         u'1.234567E06')
 
     def test_parse_number(self):
         i18n.get_i18n().set_locale('en_US')

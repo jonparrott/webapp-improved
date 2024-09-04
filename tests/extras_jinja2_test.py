@@ -19,7 +19,6 @@ import unittest
 import webapp2
 from webapp2_extras import jinja2
 
-
 current_dir = os.path.abspath(os.path.dirname(__file__))
 template_path = os.path.join(current_dir, 'resources', 'jinja2_templates')
 compiled_path = os.path.join(current_dir, 'resources',
@@ -27,20 +26,19 @@ compiled_path = os.path.join(current_dir, 'resources',
 
 
 class TestJinja2(unittest.TestCase):
+
     def test_render_template_with_i18n(self):
-        app = webapp2.WSGIApplication(config={
-            'webapp2_extras.jinja2': {
-                'template_path': template_path,
-                'environment_args': {
-                    'autoescape': True,
-                    'extensions': [
-                        'jinja2.ext.autoescape',
-                        'jinja2.ext.with_',
-                        'jinja2.ext.i18n',
-                    ],
+        app = webapp2.WSGIApplication(
+            config={
+                'webapp2_extras.jinja2': {
+                    'template_path': template_path,
+                    'environment_args': {
+                        'extensions': [
+                            'jinja2.ext.i18n',
+                        ],
+                    },
                 },
-            },
-        })
+            })
         req = webapp2.Request.blank('/')
         app.set_globals(app=app, request=req)
         j = jinja2.Jinja2(app)
@@ -50,13 +48,14 @@ class TestJinja2(unittest.TestCase):
         self.assertEqual(res, message)
 
     def test_render_template_globals_filters(self):
-        app = webapp2.WSGIApplication(config={
-            'webapp2_extras.jinja2': {
-                'template_path': template_path,
-                'globals': dict(foo='fooglobal'),
-                'filters': dict(foo=lambda x: x + '-foofilter'),
-            },
-        })
+        app = webapp2.WSGIApplication(
+            config={
+                'webapp2_extras.jinja2': {
+                    'template_path': template_path,
+                    'globals': dict(foo='fooglobal'),
+                    'filters': dict(foo=lambda x: x + '-foofilter'),
+                },
+            })
         req = webapp2.Request.blank('/')
         app.set_globals(app=app, request=req)
         j = jinja2.Jinja2(app)
@@ -66,13 +65,28 @@ class TestJinja2(unittest.TestCase):
         self.assertEqual(res, message)
 
     def test_render_template_force_compiled(self):
-        app = webapp2.WSGIApplication(config={
-            'webapp2_extras.jinja2': {
-                'template_path': template_path,
-                'compiled_path': compiled_path,
-                'force_compiled': True,
-            }
-        })
+        # Update the golden file
+        # app = webapp2.WSGIApplication(config={
+        #     'webapp2_extras.jinja2': {
+        #         'template_path': template_path,
+        #     }
+        # })
+        # req = webapp2.Request.blank('/')
+        # app.set_globals(app=app, request=req)
+        # j = jinja2.Jinja2(app)
+        # j.environment.compile_templates(
+        #     target=compiled_path,
+        #     filter_func=lambda x: x == "template1.html",
+        #     zip=None)
+
+        app = webapp2.WSGIApplication(
+            config={
+                'webapp2_extras.jinja2': {
+                    'template_path': template_path,
+                    'compiled_path': compiled_path,
+                    'force_compiled': True,
+                }
+            })
         req = webapp2.Request.blank('/')
         app.set_globals(app=app, request=req)
         j = jinja2.Jinja2(app)
